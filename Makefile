@@ -1,20 +1,25 @@
 CC = gcc
 TARGET = ProjectName
-OBJS = main.o
+
+BIN_DIR = bin
+OBJS = $(BIN_DIR)/main.o
 
 INCLUDES = -Iexternal
 CFLAGS = -Wall -O3 $(INCLUDES)
 LDFLAGS = -lm
 
-.PHONY: clean
+.PHONY: all clean
 
-all: $(TARGET)
+all: $(BIN_DIR)/$(TARGET)
 
-$(TARGET): $(OBJS)
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(BIN_DIR)/$(TARGET): $(OBJS) | $(BIN_DIR)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
-%.o: %.c
+$(BIN_DIR)/%.o: %.c | $(BIN_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJS) $(TARGET)
+	$(RM) -r $(BIN_DIR)
